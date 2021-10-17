@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import models.User;
+import services.AccountService;
 
 /**
  *
@@ -27,9 +29,11 @@ public class LoginServlet extends HttpServlet {
         String logout = request.getParameter("logout");
         if (logout != null && logout.equals("logout")) {
             session.invalidate();
+            session.setAttribute("errorMsg", "");
             System.out.println("Logged out now!");
             session = request.getSession();
         }
+        
         getServletContext().getRequestDispatcher("/WEB-INF/loginPage.jsp").forward(request, response);
         return;
     }
@@ -37,6 +41,28 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        //process submission of form
+        //validate data first
+        HttpSession session = request.getSession();
+        User user = null;
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        if (username != null && !username.equals("") && password != null && !password.equals("")) {
+            //pass info into login
+            user = new AccountService().login(username, password);
+        }
+        //store username in session if NN
+        if (user != null) {
+            session.setAttribute("username", user.getUsername());
+            //redirect user to home url
+            response.sendRedirect("home");
+            return;
+        } else {
+            //if invlaid display an appropriate error msg also keep txtboxes filled in
+            session.setAttribute("errorMsg", "Invalid Credentials");
+            response.sendRedirect("login");  
+            return;
+        }
 
     }
 

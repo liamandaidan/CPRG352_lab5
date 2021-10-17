@@ -20,5 +20,6 @@
             <input type="text" name="password" value=""><br>
             <input type="submit" value="Log in"><br>
         </form>
+        <p>${errorMsg}</p>
     </body>
 </html>
