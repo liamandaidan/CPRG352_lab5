@@ -23,7 +23,13 @@ public class LoginServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         HttpSession session = request.getSession();
-        
+        //logout of user
+        String logout = request.getParameter("logout");
+        if (logout != null && logout.equals("logout")) {
+            session.invalidate();
+            System.out.println("Logged out now!");
+            session = request.getSession();
+        }
         getServletContext().getRequestDispatcher("/WEB-INF/loginPage.jsp").forward(request, response);
         return;
     }
