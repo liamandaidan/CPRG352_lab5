@@ -27,13 +27,13 @@ public class LoginServlet extends HttpServlet {
         HttpSession session = request.getSession();
         //logout of user
         String logout = request.getParameter("logout");
-        if (logout != null && logout.equals("logout")) {
+
+        if (logout != null) {
             session.invalidate();
-            session.setAttribute("errorMsg", "");
-            System.out.println("Logged out now!");
             session = request.getSession();
+            session.setAttribute("errorMsg", "Logged out now!");
+            System.out.println("Logged out now!");
         }
-        
         getServletContext().getRequestDispatcher("/WEB-INF/loginPage.jsp").forward(request, response);
         return;
     }
@@ -60,7 +60,7 @@ public class LoginServlet extends HttpServlet {
         } else {
             //if invlaid display an appropriate error msg also keep txtboxes filled in
             session.setAttribute("errorMsg", "Invalid Credentials");
-            response.sendRedirect("login");  
+            response.sendRedirect("login");
             return;
         }
 
